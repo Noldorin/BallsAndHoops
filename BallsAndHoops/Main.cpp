@@ -1,4 +1,14 @@
 // Driver for NextBall.cpp
+//
+// This driver does not robustly or exhaustively 
+// test all of the required functionality 
+// described in the problem statement.
+//
+// It's pretty simple. But it displays basic functionality in
+// a couple different ways, and if you modify the MockData sets
+// and throw a few breakpoints around, you should be able to 
+// verify the code pretty thoroughly 
+
 
 #include "NextBall.h"
 #include "Objects.h"
@@ -10,6 +20,8 @@ using namespace std;
 vector<NextBall::MapData> InitMockData1();
 vector<NextBall::MapData> InitMockData2();
 
+
+// Test Driver Entry Point
 int main()
 {
 	vector<NextBall::MapData> MapData;
