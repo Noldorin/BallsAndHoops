@@ -5,6 +5,13 @@ This is my class for:
 2. Score tracking
 3. Enabling collected ball tracking.
 
+libraries used:
+<iostream>
+<vector>
+<algorithm>
+<cmath>
+<cstdlib>
+
 It has a very rudimentary driver that does not cover all the functionality; manually messing
 around with the MockData in Main.cpp will let you test against various game states.
 
