@@ -1,5 +1,4 @@
 # BallsAndHoops
-Submission for UndeadLabs Programming Test
 
 This is my class for:
 1. Determining which ball the player should get next
