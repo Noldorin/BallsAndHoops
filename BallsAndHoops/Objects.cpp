@@ -25,27 +25,9 @@ Object::~Object()
 
 // Gets/Sets
 
-unsigned int Object::GetXPos()
-{
-	return xpos;
-}
-void Object::SetXPos(int newX)
-{
-	xpos = newX;
-}
-unsigned int Object::GetYPos()
-{
-	return ypos;
-}
-void Object::SetYPos(int newY)
-{
-	ypos = newY;
-}
-
 int Object::GetID()
 {
 	return ID;
-
 }
 
 unsigned int Object::GetType()
@@ -181,8 +163,26 @@ Hoop::Hoop(unsigned int x, unsigned int y, unsigned int orient, vector<Ball> bal
 	TypeID = HOOP;
 	xpos = x;
 	ypos = y;
+	orientation = orient;
 	MyBallList = ballList;
 	ID = id;
+
+	// Convert orientation to radians
+	double pi = acos(-1);
+	double r1 = ((orient - 15) * pi) / 180.0;
+	double r2 = ((orient + 15) * pi) / 180.0;
+
+	// Use orientation find the ending coordinatse of 2 "lines"
+	// both start at (xpos,ypos)
+	// one ends at (x1, y1), the other ends at (x2, y2)
+	//
+	// Together these two lines create the facing arc the 
+	// player has to be within to score points from a 
+	// completed hoop
+	facing.x1_end = xpos + (cos(r1) * 10); // Since the player needs to be within 5 meters of the hoop
+	facing.y1_end = ypos + (sin(r1) * 10); // 10 is more than enough max, length to draw these lines to
+	facing.x2_end = xpos + (cos(r2) * 10);
+	facing.y2_end = ypos + (sin(r2) * 10);
 }
 
 Hoop::~Hoop()
@@ -194,6 +194,10 @@ int Hoop::operator=(const Hoop &rhs)
 	xpos = rhs.xpos;
 	ypos = rhs.ypos;
 	orientation = rhs.orientation;
+	facing.x1_end = rhs.facing.x1_end;
+	facing.y1_end = rhs.facing.y1_end;
+	facing.x2_end = rhs.facing.x2_end;
+	facing.y2_end = rhs.facing.y2_end;
 	MyBallList = rhs.MyBallList;
 	ID = rhs.ID;
 

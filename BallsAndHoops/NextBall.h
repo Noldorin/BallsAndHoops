@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 #include "Objects.h"
 
 class NextBall 
@@ -9,14 +10,25 @@ class NextBall
 		// Properties
 		vector<Hoop> Hoops;
 		vector<Ball> Balls;
+		Hoop currentHoop;
+		Ball currentBall;
 		Hoop previousHoop;
 		Ball prevNextBall;
 
-		int prevX, prevY;
+		unsigned int prevX, prevY;
 		
 		// Private Helpers
 		float GetDistance(unsigned int x1, unsigned int y1,
 				          unsigned int x2, unsigned int y2);
+
+		// Gets the area of the triangle formed by
+		// (x1, y1), (x2, y2) and (x3, y3) 
+		float GetArea(double x1, double y1, double x2, double y2, double x3, double y3);
+
+		// Determines if a point lies inside the triangle formed
+		//  by (x1, y1), (x2, y2) and (x3, y3) 
+		bool WithinTriangle(double x1, double y1, double x2, double y2, double x3, double y3, double x, double y);
+
 
 	public:
 		NextBall();

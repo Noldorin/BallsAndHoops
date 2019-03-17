@@ -7,42 +7,70 @@
 using namespace std;
 
 // Function headers
-vector<NextBall::MapData> InitMockData();
+vector<NextBall::MapData> InitMockData1();
+vector<NextBall::MapData> InitMockData2();
 
 int main()
 {
-	vector<NextBall::MapData> MapData = InitMockData();
+	vector<NextBall::MapData> MapData;
 
 	NextBall myNextBall;
 	Player myPlayer;
+	myPlayer.ypos = 2;
+	int input;
 
-	cout << "Instantiating NextBall class. Press enter to trigger Init() >" << endl;
+	cout << "Instantiating NextBall class." << endl
+		<< "Enter 1 to test for basic init or 2 to test for point grab : ";
+
+	cin >> input;
 	cin.ignore();
+
+	if (input == 1)
+	{
+		MapData = InitMockData1();
+	}
+	else if (input == 2)
+	{
+		MapData = InitMockData2();
+	}
 
 	myNextBall.Init(MapData);
 
-	cout << "NextBall was successfully initialized. Press enter to trigger Tick() >";
+	cout << endl << "NextBall was successfully initialized. Press enter to trigger Tick()  >";
 	cin.ignore();
 
-	while (true)
+	while (input != 0)
 	{
 		myNextBall.Tick(&myPlayer);
 
 		Hoop currentHoop = myPlayer.GetCurrentHoop();
 		Ball nextBall = myPlayer.GetNextBall();
-		cout << "the current hoop is " << currentHoop.GetID() << endl;
-		cout << "the next ball to get is " << nextBall.GetID() << endl;
+		cout << "the ID of the current hoop is " << currentHoop.GetID() << endl
+			<< "the player's current score is " << myPlayer.GetScore() << endl;
 
-		cout << "Press enter to trigger Tick() again >";
-		cin.ignore();	
+		if (nextBall.GetID() < 0)
+		{
+			cout << "There are no balls in the current hoop" << endl
+				<< "The player will need to:" << endl
+				<< "A) move close to another hoop" << endl
+				<< "B) complete this hoop by moving 5 meters in front of it" << endl
+				<< "C) if they are already 5 meters in front of it, just wait one more Tick()!" << endl;
+		}
+		else
+		{
+			cout << "the ID of the next ball to get is " << nextBall.GetID() << endl;
+		}
 
-	} 
+		cout << endl << "Enter 1 to trigger Tick again, or 0 to exit: ";
+		cin >> input;
+		cin.ignore();
+	}
 
 	return 0;
 }
 
 // Helper functions
-vector<NextBall::MapData> InitMockData()
+vector<NextBall::MapData> InitMockData1()
 {
 	Object tempObj; // used to access the CONST TypeID values
 	vector<NextBall::MapData> myMapData;
@@ -59,9 +87,9 @@ vector<NextBall::MapData> InitMockData()
 
 	tempData2.ID = 20;
 	tempData2.TypeID = tempObj.HOOP;
-	tempData2.xpos = 7;
-	tempData2.ypos = 4;
-	tempData2.orientation = 179;
+	tempData2.xpos = 3;
+	tempData2.ypos = 2;
+	tempData2.orientation = 180;
 	#pragma endregion
 
 	#pragma region MockBalls
@@ -118,6 +146,51 @@ vector<NextBall::MapData> InitMockData()
 	myMapData.push_back(tempData6);
 	myMapData.push_back(tempData7);
 	#pragma endregion
+
+	return myMapData;
+}
+
+// Helper functions
+vector<NextBall::MapData> InitMockData2()
+{
+	Object tempObj; // used to access the CONST TypeID values
+	vector<NextBall::MapData> myMapData;
+
+#pragma region MockHoops
+	NextBall::MapData tempData1;
+	NextBall::MapData tempData2;
+
+	tempData1.ID = 10;
+	tempData1.TypeID = tempObj.HOOP;
+	tempData1.xpos = 9;
+	tempData1.ypos = 12;
+	tempData1.orientation = 240;
+
+	tempData2.ID = 20;
+	tempData2.TypeID = tempObj.HOOP;
+	tempData2.xpos = 3;
+	tempData2.ypos = 2;
+	tempData2.orientation = 180;
+#pragma endregion
+
+#pragma region MockBalls
+	NextBall::MapData tempData3;
+	NextBall::MapData tempData4;
+
+	tempData3.ID = 1;
+	tempData3.TypeID = tempObj.BALL;
+	tempData3.color = 1;
+	tempData3.xpos = 11;
+	tempData3.ypos = 13;
+
+#pragma endregion
+
+#pragma region push_backs
+	myMapData.push_back(tempData1);
+	myMapData.push_back(tempData2);
+	myMapData.push_back(tempData3);
+	myMapData.push_back(tempData4);
+#pragma endregion
 
 	return myMapData;
 }

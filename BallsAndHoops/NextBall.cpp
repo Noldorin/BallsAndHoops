@@ -10,7 +10,7 @@
 
 using namespace std;
 
-
+#pragma region HelperMethods
 // Helper Methods
 // Gets the distance between two game objects
 float NextBall::GetDistance(unsigned int x1, unsigned int y1,
@@ -22,6 +22,34 @@ float NextBall::GetDistance(unsigned int x1, unsigned int y1,
 	float distance = sqrt((double)temp_x * temp_x + temp_y * temp_y);
 	return distance;
 }
+
+float NextBall::GetArea(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+	return abs((x1*(y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
+}
+
+// Determines if a point (x y) lies inside the main triangle
+// formed by (x1, y1), (x2, y2) and (x3, y3) 
+bool NextBall::WithinTriangle(double x1, double y1, double x2, double y2, double x3, double y3, double x, double y)
+{
+	// Calculate the area of the main triangle 
+	float A = GetArea(x1, y1, x2, y2, x3, y3);
+
+	// Calculate area of each triangle formed by connecting  
+	// 2 of the vertices of the main triangle with (x, y)
+	float A1 = GetArea(x, y, x2, y2, x3, y3);
+
+	float A2 = GetArea(x1, y1, x, y, x3, y3);
+
+	float A3 = GetArea(x1, y1, x2, y2, x, y);
+
+	// If the sum of the areas made by these sub-triangles
+	// is equal to the area of the main triangle, then (x,y)
+	// must be within it
+	return (A == A1 + A2 + A3);
+}
+
+#pragma endregion
 
 // default constructor
 NextBall::NextBall()
@@ -47,10 +75,15 @@ void NextBall::Tick(Player *myPlayer)
 	// If this is the first tick of the game, both will be -1
 	previousHoop = myPlayer->GetCurrentHoop();
 	prevNextBall = myPlayer->GetNextBall();
+	
+	int searchFor = previousHoop.GetID();; // For use in find_if
 
-	// If the player has moved, or if it's the very first tick
+	// If the player has moved, or 
+	// if it's the very first tick, or
+	// if the player completed the previous hoop
+	//
 	// Calculate the hoop that the player is closest too
-	if (prevX != myPlayer->GetXPos() || prevY != myPlayer->GetYPos() || previousHoop.GetID() == -1)
+	if (prevX != myPlayer->xpos || prevY != myPlayer->ypos || previousHoop.GetID() == -1 || Hoops.end() == (find_if(Hoops.begin(), Hoops.end(), [&searchFor](Hoop& obj) {return obj.GetID() == searchFor; })))
 	{
 		float tempDistance;
 		int smallestD = INT16_MAX;
@@ -58,8 +91,8 @@ void NextBall::Tick(Player *myPlayer)
 
 		for (int i = 0; i < Hoops.size(); i++)
 		{
-			tempDistance = GetDistance(myPlayer->GetXPos(), myPlayer->GetYPos(),
-				Hoops[i].GetXPos(), Hoops[i].GetYPos());
+			tempDistance = GetDistance(myPlayer->xpos, myPlayer->ypos,
+				Hoops[i].xpos, Hoops[i].ypos);
 
 			// NOTE: If the player is equidistant from multiple hoops, it will
 			// stick with whichever hoop it was most recently closer to
@@ -76,17 +109,55 @@ void NextBall::Tick(Player *myPlayer)
 		// Save the new CurrentHoop, might be unchanged
 		myPlayer->SetCurrentHoop(Hoops[tempIndex]);
 
+		currentHoop = myPlayer->GetCurrentHoop();
+
 		// Update stored location
-		prevX = myPlayer->GetXPos();
-		prevY = myPlayer->GetYPos();
+		prevX = myPlayer->xpos;
+		prevY = myPlayer->ypos;
 	}
 	// WE NOW HAVE AN ACCURATE CURRENT HOOP
 
 	// If the current Hoops ball-list is empty check if the 
 	// player is in the right position to get a point
+	//
+	// NOTE : If a hoop gets put on the map without any balls
+	// close to it, the player will still get a point for 
+	// "completing" it
 	if (myPlayer->GetCurrentHoop().MyBallList.empty())
 	{
-		cout << "fuck u" << endl; // check vector stuff
+		// If the player is close enough to the hoop
+		if (GetDistance(prevX, prevY, currentHoop.xpos, currentHoop.ypos) <= 5)
+		{
+			double x1 = currentHoop.xpos;
+			double y1 = currentHoop.ypos;
+			double x2 = currentHoop.facing.x1_end;
+			double y2 = currentHoop.facing.y1_end;
+			double x3 = currentHoop.facing.x2_end;
+			double y3 = currentHoop.facing.y2_end;
+
+			// If the player is within the facing arc of the hoop
+			if (WithinTriangle(x1, y1, x2, y2, x3, y3, myPlayer->xpos, myPlayer->ypos))
+			{
+				// find the hoop and remove it from the Hoops list.
+				searchFor = currentHoop.GetID();
+				auto iter = find_if(Hoops.begin(), Hoops.end(), [&searchFor](Hoop& obj) {return obj.GetID() == searchFor; });
+				Hoops.erase(iter);
+				cout << endl << "the player completed the current hoop!" << endl
+					<< "it has been removed from the game.. >";
+				cin.ignore();
+
+				// Give the player a point for completing the hoop
+				myPlayer->IncrementScore();
+
+				cout << "the player gets a point!! >";
+			}
+			else
+			{
+				cout << "no points for you... gotta move >";
+			}
+			cin.ignore();
+			cout << endl;
+		}
 	}
 	else if (myPlayer->GetCurrentHoop().GetID() != previousHoop.GetID())
 	{
@@ -192,8 +263,8 @@ void NextBall::Init(vector<MapData> MyMapData)
 	{
 		for (int j = 0; j < Hoops.size(); j++)
 		{
-			tempDistance = GetDistance(Balls[i].GetXPos(), Balls[i].GetYPos(),
-				Hoops[j].GetXPos(), Hoops[j].GetYPos());
+			tempDistance = GetDistance(Balls[i].xpos, Balls[i].ypos,
+				Hoops[j].xpos, Hoops[j].ypos);
 
 			// NOTE: If the ball is equidistant to multiple hoops, it will go
 			// in the BallList of whichever one of those hoops it checks

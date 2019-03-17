@@ -27,8 +27,6 @@ class Object
 	private:
 
 	protected:
-		unsigned int xpos = 0;
-		unsigned int ypos = 0;
 		int ID = -1; // A globally unique ID
 					 // Defaults to -1 if uninitialized.
 					 // Explicit Assignment is required for full functionality
@@ -44,12 +42,11 @@ class Object
 		// default destructor
 		~Object();
 
-		// Gets-Sets
-		unsigned int GetXPos();
-		void SetXPos(int newX);
-		unsigned int GetYPos();
-		void SetYPos(int newY);
+		// Public properties
+		unsigned int xpos = 0;
+		unsigned int ypos = 0;
 
+		// Gets-Sets
 		int GetID();
 
 		unsigned int GetType();
@@ -127,6 +124,22 @@ public:
 
 class Hoop : public Object
 {
+	struct Arc
+	{
+		// The arbitrarily large end points of the 
+		// line creating the lower angle bound
+		// of the 30-degree arc centered on the 
+		// line that pointing to orientation
+		double x1_end;
+		double y1_end;
+
+		// ""
+		// creating the higher angle bound
+		// ""
+		double x2_end;
+		double y2_end;
+	};
+
 private:
 	unsigned int TypeID = HOOP;
 	int orientation;
@@ -147,6 +160,9 @@ public:
 
 	// List of balls associated with this hoop
 	vector<Ball> MyBallList;
+
+	// The arc created by the orientation of the hoop
+	Arc facing;
 };
 
 #endif // HOOP_H
