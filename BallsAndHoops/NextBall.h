@@ -25,7 +25,7 @@ class NextBall
 		// (x1, y1), (x2, y2) and (x3, y3) 
 		float GetArea(double x1, double y1, double x2, double y2, double x3, double y3);
 
-		// Determines if a point lies inside the triangle formed
+		// Determines if a point (x, y) lies inside the triangle formed
 		//  by (x1, y1), (x2, y2) and (x3, y3) 
 		bool WithinTriangle(double x1, double y1, double x2, double y2, double x3, double y3, double x, double y);
 
