@@ -1,7 +1,9 @@
 // BallsAndHoops.cpp 
 //
-// This program uses the current game state to calculate the next ball the 
-// player needs to collect.
+// This class uses the current game state to calculate the next ball the 
+// player needs to collect. It also detects if the player has collected 
+// all the balls for the current hoop, and if they are in the correct
+// position to complete it.
 //
 // ASSUMPTION: The player alway starts at the origin, (0,0) which is the bottom
 // left most location on the map
@@ -79,8 +81,10 @@ void NextBall::Tick(Player *myPlayer)
 	int searchFor = previousHoop.GetID();; // For use in find_if
 
 	// If the player has moved, or 
-	// if it's the very first tick, or
-	// if the player completed the previous hoop
+	// if it's the very first tick of the level, or
+	// if the player completed the previousHoop in the last tick*
+	//
+	// *in which case that loop will no longer be in the game
 	//
 	// Calculate the hoop that the player is closest too
 	if (prevX != myPlayer->xpos || prevY != myPlayer->ypos || previousHoop.GetID() == -1 || Hoops.end() == (find_if(Hoops.begin(), Hoops.end(), [&searchFor](Hoop& obj) {return obj.GetID() == searchFor; })))
@@ -117,12 +121,12 @@ void NextBall::Tick(Player *myPlayer)
 	}
 	// WE NOW HAVE AN ACCURATE CURRENT HOOP
 
-	// If the current Hoops ball-list is empty check if the 
+	// If the current Hoop's ball-list is empty check if the 
 	// player is in the right position to get a point
 	//
 	// NOTE : If a hoop gets put on the map without any balls
 	// close to it, the player will still get a point for 
-	// "completing" it
+	// "completing" it if they move to the right position
 	if (myPlayer->GetCurrentHoop().MyBallList.empty())
 	{
 		// If the player is close enough to the hoop
@@ -174,11 +178,13 @@ void NextBall::Tick(Player *myPlayer)
 		// i.e. it doesn't remember what the last ball the player got
 		// from that loop was, and "resets" to the top ball in that Hoops
 		// BallList
+
 		myPlayer->SetNextBall(myPlayer->GetCurrentHoop().MyBallList[0]);
 	}
 	else if (myPlayer->CollectedBalls.size() > 0 && prevNextBall.GetID() == myPlayer->CollectedBalls[myPlayer->CollectedBalls.size() - 1].GetID())
 	{
-		// Else if the player has collected the previousNextBall
+		// Else if the player has collected the previous NextBall
+		// i.e. the ball they were looking for most recently
 		//
 		// find the new NextBall the player should collect
 		bool found = false;
@@ -187,7 +193,7 @@ void NextBall::Tick(Player *myPlayer)
 		// if the player has collected a ball
 		if (prevNextBall.GetID() > 0)
 		{
-			int prevColor = prevNextBall.GetColor();
+			unsigned int prevColor = prevNextBall.GetColor();
 
 			//Note : the Init() function sorts all Hoop's BallLists in color order
 
@@ -202,8 +208,8 @@ void NextBall::Tick(Player *myPlayer)
 					myPlayer->SetNextBall(myPlayer->GetCurrentHoop().MyBallList[0]);
 					found = true;
 				}
-				// Else, if we have found the next ball of a different color
-				else if (myPlayer->GetCurrentHoop().MyBallList[iter].GetColor() != prevColor)
+				// Else, if we have found the next ball of a lower priority color
+				else if (myPlayer->GetCurrentHoop().MyBallList[iter].GetColor() > prevColor)
 				{
 					// Assign that ball as the next available ball
 					myPlayer->SetNextBall(myPlayer->GetCurrentHoop().MyBallList[iter]);
@@ -250,7 +256,7 @@ void NextBall::Init(vector<MapData> MyMapData)
 	//       NextBall.Init(Balls, Hoops)
 	//
 	//       But based on the problem statement, we have to do extra work here 
-	//       to sort it out. complexity is O(numHoops^numBalls). It's inefficient
+	//       to sort it out. The complexity is O(numHoops^numBalls). It's inefficient
 	//       for really large maps but we only have to call it once per level.
 
 	float tempDistance;
@@ -267,8 +273,7 @@ void NextBall::Init(vector<MapData> MyMapData)
 				Hoops[j].xpos, Hoops[j].ypos);
 
 			// NOTE: If the ball is equidistant to multiple hoops, it will go
-			// in the BallList of whichever one of those hoops it checks
-			// first
+			// in the BallList of whichever one of those hoops it checks first
 			if (tempDistance < smallestD)
 			{
 				smallestD = tempDistance;
@@ -280,7 +285,7 @@ void NextBall::Init(vector<MapData> MyMapData)
 		smallestD = INT16_MAX;
 	}
 
-	// Finally, sort all Ball lists in color order
+	// Finally, sort all BalLists in ascending color order
 	for (int i = 0; i < Hoops.size(); i++)
 	{
 		sort(Hoops[i].MyBallList.begin(), Hoops[i].MyBallList.end(), [](Ball &a, Ball &b) {return a.GetColor() < b.GetColor(); });
