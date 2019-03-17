@@ -13,7 +13,7 @@ I have made a number of important assumptions that do not break
 the requirements of the problem statement as far as I can tell.
 
 They are all listed appropriately in the in-code comments but 
-I'm going to relist them here for your convinience.
+I'm going to relist them here for your convenience.
 
 ASSUMPTION 1:
 The player alway starts at the origin, (0,0) which is the bottom left-most 
@@ -22,7 +22,7 @@ i.e. there are no negative coordinates on the map
 
 ASSUMPTION 2:
 All objects that get passed to NextBall::Init() as part of the 
-vector<MapData> MapData list have been initalized in a way that 
+vector<MapData> MapData list have been initialized in a way that 
 follows the explicit and implicit rules of the class's design.
 
 There is not exhaustive checking for valid values of all the objects.
@@ -47,8 +47,8 @@ i.e. if it was 6m away from HoopA and 8m away from HoopB,
 and then moved 1m such that it was 7m away from both A and B,
 it's "CurrentHoop" would remain A.
 
-Similarly when building the BallLists for each Hoop, if a Ball is  
-placed equidistanct from two Hoops, it will be added to whichever
+Similarly, when building the BallLists for each Hoop, if a Ball is  
+placed equidistant from two Hoops, it will be added to whichever
 Hoop comes first in the vector<Hoops> list for the map
 
 NOTE 2:
@@ -74,5 +74,5 @@ or allowing them to pick it up.
 
 Therefor I provide a vector<Ball> list in the player object that would
 be very easy to add found balls to as they are popped off the BallLists
-of the various hoops. However none of the methods in this class actually
+of the various hoops. However, none of the methods in this class actually
 performs those actions.
