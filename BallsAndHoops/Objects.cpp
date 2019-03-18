@@ -12,7 +12,7 @@ Object::Object()
 }
 
 // init constructor, takes position.
-Object::Object(unsigned int x, unsigned int y)
+Object::Object(int x, int y)
 {
 	xpos = x;
 	ypos = y;
@@ -44,7 +44,7 @@ Player::Player()
 	TypeID = PLAYER;
 }
 
-Player::Player(unsigned int x, unsigned int y, int id) 
+Player::Player(int x, int y, int id) 
 {
 	TypeID = PLAYER;
 	xpos = x;
@@ -116,7 +116,7 @@ Ball::Ball()
 	TypeID = BALL;
 }
 
-Ball::Ball(unsigned int x, unsigned int y, unsigned int c, int id)
+Ball::Ball(int x, int y, unsigned int c, int id)
 {
 	TypeID = BALL;
 	xpos = x;
@@ -158,7 +158,7 @@ Hoop::Hoop()
 {
 }
 
-Hoop::Hoop(unsigned int x, unsigned int y, unsigned int orient, vector<Ball> ballList, int id)
+Hoop::Hoop(int x, int y, unsigned int orient, vector<Ball> ballList, int id)
 {
 	TypeID = HOOP;
 	xpos = x;

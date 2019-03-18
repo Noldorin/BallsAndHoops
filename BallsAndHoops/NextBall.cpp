@@ -15,8 +15,8 @@ using namespace std;
 #pragma region HelperMethods
 // Helper Methods
 // Gets the distance between two game objects
-float NextBall::GetDistance(unsigned int x1, unsigned int y1,
-	unsigned int x2, unsigned int y2)
+float NextBall::GetDistance(int x1, int y1,
+	                        int x2, int y2)
 {
 	int temp_x = (x1 - x2);
 	int temp_y = (y1 - y2);
@@ -48,7 +48,9 @@ bool NextBall::WithinTriangle(double x1, double y1, double x2, double y2, double
 	// If the sum of the areas made by these sub-triangles
 	// is equal to the area of the main triangle, then (x,y)
 	// must be within it
-	return (A == A1 + A2 + A3);
+	float tot = A1 + A2 + A3;
+
+	return (A <= tot + 0.5 || A >= tot - 0.5);
 }
 
 #pragma endregion

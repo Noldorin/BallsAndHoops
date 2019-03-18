@@ -28,7 +28,10 @@ int main()
 
 	NextBall myNextBall;
 	Player myPlayer;
-	myPlayer.ypos = 2;
+
+	myPlayer.xpos = 1;
+	myPlayer.ypos = 1;
+
 	int input;
 
 	cout << "Instantiating NextBall class." << endl
@@ -93,14 +96,14 @@ vector<NextBall::MapData> InitMockData1()
 
 	tempData1.ID = 10;
 	tempData1.TypeID = tempObj.HOOP;
-	tempData1.xpos = 9;
-	tempData1.ypos = 12;
+	tempData1.xpos = -1;
+	tempData1.ypos = -2;
 	tempData1.orientation = 240;
 
 	tempData2.ID = 20;
 	tempData2.TypeID = tempObj.HOOP;
-	tempData2.xpos = 3;
-	tempData2.ypos = 2;
+	tempData2.xpos = 5;
+	tempData2.ypos = 4;
 	tempData2.orientation = 180;
 	#pragma endregion
 
@@ -174,26 +177,26 @@ vector<NextBall::MapData> InitMockData2()
 
 	tempData1.ID = 10;
 	tempData1.TypeID = tempObj.HOOP;
-	tempData1.xpos = 9;
-	tempData1.ypos = 12;
-	tempData1.orientation = 240;
+	tempData1.xpos = -1;
+	tempData1.ypos = -1;
+	tempData1.orientation = 45;
 
 	tempData2.ID = 20;
 	tempData2.TypeID = tempObj.HOOP;
-	tempData2.xpos = 3;
-	tempData2.ypos = 2;
+	tempData2.xpos = 5;
+	tempData2.ypos = 4;
 	tempData2.orientation = 180;
 #pragma endregion
 
 #pragma region MockBalls
 	NextBall::MapData tempData3;
-	NextBall::MapData tempData4;
+	//NextBall::MapData tempData4;
 
 	tempData3.ID = 1;
 	tempData3.TypeID = tempObj.BALL;
 	tempData3.color = 1;
-	tempData3.xpos = 11;
-	tempData3.ypos = 13;
+	tempData3.xpos = 6;
+	tempData3.ypos = 7;
 
 #pragma endregion
 
@@ -201,7 +204,7 @@ vector<NextBall::MapData> InitMockData2()
 	myMapData.push_back(tempData1);
 	myMapData.push_back(tempData2);
 	myMapData.push_back(tempData3);
-	myMapData.push_back(tempData4);
+	//myMapData.push_back(tempData4);
 #pragma endregion
 
 	return myMapData;

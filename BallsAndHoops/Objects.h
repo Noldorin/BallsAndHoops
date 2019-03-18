@@ -37,14 +37,14 @@ class Object
 		Object();
 
 		// init constructor, takes position.
-		Object(unsigned int x, unsigned int y);
+		Object(int x, int y);
 
 		// default destructor
 		~Object();
 
 		// Public properties
-		unsigned int xpos = 0;
-		unsigned int ypos = 0;
+		int xpos = 0;
+		int ypos = 0;
 
 		// Gets-Sets
 		int GetID();
@@ -86,7 +86,7 @@ public:
 	Ball();
 
 	// Init color Constructor
-	Ball(unsigned int x, unsigned int y, unsigned int color, int id);
+	Ball(int x, int y, unsigned int color, int id);
 
 	~Ball();
 
@@ -149,7 +149,7 @@ public:
 	Hoop();
 
 	// Init list constructor
-	Hoop(unsigned int x, unsigned int y, unsigned int orient, vector<Ball> ballList, int id);
+	Hoop(int x, int y, unsigned int orient, vector<Ball> ballList, int id);
 
 	~Hoop();
 
@@ -188,7 +188,7 @@ class Player : public Object
 		// Default Constructor
 		Player();
 
-		Player(unsigned int x, unsigned int y, int id);
+		Player(int x, int y, int id);
 
 		~Player();
 

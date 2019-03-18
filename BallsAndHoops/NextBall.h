@@ -15,11 +15,11 @@ class NextBall
 		Hoop previousHoop;
 		Ball prevNextBall;
 
-		unsigned int prevX, prevY;
+		int prevX, prevY;
 		
 		// Private Helpers
-		float GetDistance(unsigned int x1, unsigned int y1,
-				          unsigned int x2, unsigned int y2);
+		float GetDistance( int x1,  int y1,
+				           int x2,  int y2);
 
 		// Gets the area of the triangle formed by
 		// (x1, y1), (x2, y2) and (x3, y3) 
@@ -57,8 +57,8 @@ class NextBall
 		struct MapData
 		{
 			// Obj Attr
-			unsigned int xpos = 0;
-			unsigned int ypos = 0;
+			int xpos = 0;
+			int ypos = 0;
 			unsigned int ID; // A globally unique ID 
 			unsigned int TypeID; // Indicates Object Type 
 
