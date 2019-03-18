@@ -50,7 +50,7 @@ bool NextBall::WithinTriangle(double x1, double y1, double x2, double y2, double
 	// must be within it
 	float tot = A1 + A2 + A3;
 
-	return (A <= tot + 0.5 || A >= tot - 0.5);
+	return (A <= tot + 0.5 || A >= tot - 0.5); // accept reasonable precision bounds
 }
 
 #pragma endregion
